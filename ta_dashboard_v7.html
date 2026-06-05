@@ -1,0 +1,772 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--or:#E8621A;--or2:#F5864A;--tl:#1D9E75;--rd:#E24B4A;--am:#BA7517;--bl:#378ADD;--gy:#5F5E5A;--bg:#F5F4F1;--cd:#fff;--bd:rgba(0,0,0,0.1);--t:#2C2C2A;--t2:#5F5E5A;--t3:#888780;--nv:#2C2C2A}
+body{font-family:var(--font-sans,'Inter',sans-serif);font-size:11px;background:var(--bg)}
+.db{display:flex;width:100%;min-height:820px;background:var(--bg)}
+.sb{width:182px;min-width:182px;background:var(--nv);display:flex;flex-direction:column;flex-shrink:0}
+.sb-hd{padding:13px 13px 10px;border-bottom:0.5px solid rgba(255,255,255,.1)}
+.sb-pages{font-size:10px;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.08em;font-weight:500;margin-bottom:6px}
+.ni{display:flex;align-items:center;gap:8px;padding:9px 12px;cursor:pointer;font-size:11px;color:rgba(255,255,255,.6);border-left:2px solid transparent;line-height:1.3}
+.ni:hover{background:rgba(255,255,255,.07);color:#fff}
+.ni.on{background:rgba(232,98,26,.18);color:#F5864A;border-left-color:#E8621A;font-weight:500}
+.ni .num{font-size:10px;background:rgba(255,255,255,.1);color:rgba(255,255,255,.4);border-radius:10px;padding:1px 6px;margin-left:auto}
+.ni.on .num{background:rgba(232,98,26,.3);color:#F5864A}
+.ct{flex:1;display:flex;flex-direction:column;min-width:0;overflow:hidden}
+.hdr{background:var(--cd);border-bottom:0.5px solid var(--bd);padding:0 16px;display:flex;align-items:center;gap:12px;height:54px;flex-shrink:0}
+.hdr-logo-block{display:flex;align-items:center;gap:10px;padding-right:14px;border-right:0.5px solid var(--bd)}
+.hdr-logo-tdcx{font-size:26px;font-weight:500;color:var(--t);letter-spacing:-.8px;line-height:1}
+.hdr-logo-sep{width:0.5px;height:28px;background:var(--bd)}
+.hdr-pg{display:flex;flex-direction:column;justify-content:center}
+.hdr-ta{font-size:10px;color:var(--t2);text-transform:uppercase;letter-spacing:.07em;font-weight:500;line-height:1.3}
+.hdr-title{font-size:20px;font-weight:500;color:var(--or);line-height:1}
+.hdr-right{margin-left:auto;display:flex;align-items:center;gap:8px}
+.badge{font-size:11px;padding:3px 9px;border-radius:10px;background:#F1EFE8;color:var(--t2)}
+.main{display:flex;flex:1;min-height:0}
+.panel{flex:1;overflow-y:auto;padding:12px 13px 20px;min-width:0}
+.rail{width:168px;min-width:168px;background:var(--cd);border-left:0.5px solid var(--bd);overflow-y:auto;padding:10px}
+.pg{display:none}.pg.on{display:block}
+.sh{font-size:11px;font-weight:500;color:var(--t2);text-transform:uppercase;letter-spacing:.06em;margin:12px 0 6px;display:flex;align-items:center;gap:7px}
+.sh::after{content:'';flex:1;height:0.5px;background:var(--bd)}
+.sh:first-child{margin-top:0}
+.kc{background:var(--cd);border:0.5px solid var(--bd);border-radius:8px;padding:9px 11px}
+.kc.ok{border-left:2px solid var(--tl);border-radius:0 8px 8px 0}
+.kc.warn{border-left:2px solid var(--rd);border-radius:0 8px 8px 0}
+.kc.neu{border-left:2px solid #B4B2A9;border-radius:0 8px 8px 0}
+.kl{font-size:11px;color:var(--t2);margin-bottom:2px;line-height:1.3}
+.kv{font-size:20px;font-weight:500;color:var(--t);line-height:1}
+.kd{font-size:11px;margin-top:2px}
+.up{color:var(--tl)}.dn{color:var(--rd)}.nm{color:var(--t2)}
+.card{background:var(--cd);border:0.5px solid var(--bd);border-radius:8px;padding:11px}
+.cht{font-size:12px;font-weight:500;color:var(--t);margin-bottom:7px;display:flex;justify-content:space-between;align-items:center;gap:6px;flex-wrap:wrap}
+.pill{display:inline-block;font-size:10px;padding:2px 7px;border-radius:10px;font-weight:500}
+.p-ok{background:#E1F5EE;color:#085041}
+.p-or{background:#FAECE7;color:#993C1D}
+.p-gray{background:#F1EFE8;color:#5F5E5A}
+.p-info{background:#E6F1FB;color:#0C447C}
+.note{font-size:11px;color:var(--t2);background:#F1EFE8;border-radius:5px;padding:5px 9px;margin-bottom:7px}
+.tbl{width:100%;border-collapse:collapse;font-size:11px;table-layout:fixed}
+.tbl th{text-align:left;color:var(--t2);padding:4px 5px;border-bottom:0.5px solid var(--bd);font-weight:500;background:#F1EFE8;font-size:10px;white-space:nowrap}
+.tbl td{padding:4px 5px;color:var(--t);border-bottom:0.5px solid rgba(0,0,0,0.05);font-size:11px}
+.tbl tr:last-child td{border-bottom:none}
+.tbl .tot td{font-weight:500;border-top:0.5px solid var(--bd);background:#F1EFE8}
+.tbl .pct-row td{font-size:10px;color:var(--t2);background:#FAECE7}
+.tbl .r{text-align:right}
+.sl-h{font-size:10px;font-weight:500;color:var(--t2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;margin-top:9px}
+.sl-h:first-child{margin-top:0}
+select,input[type=date]{width:100%;font-size:11px;padding:3px 6px;background:#F1EFE8;border:0.5px solid var(--bd);border-radius:4px;color:var(--t);outline:none;margin-bottom:3px}
+.dl{font-size:11px;color:var(--t2);margin-bottom:2px}
+.tgl{display:flex;gap:4px;margin-bottom:8px;flex-wrap:wrap}
+.tgl button{font-size:11px;padding:3px 11px;border-radius:5px;border:0.5px solid var(--bd);background:var(--cd);color:var(--t2);cursor:pointer}
+.tgl button.on{background:var(--or);color:#fff;border-color:var(--or)}
+.sec{display:none}.sec.on{display:block}
+.br{display:flex;align-items:center;gap:5px;margin-bottom:4px}
+.bl{font-size:11px;color:var(--t2);width:80px;text-align:right;flex-shrink:0}
+.bt{flex:1;height:13px;background:#F1EFE8;border-radius:2px;overflow:hidden}
+.bf{height:100%;border-radius:2px}
+.bv{font-size:11px;color:var(--t2);width:38px;flex-shrink:0}
+.trk{height:5px;background:#F1EFE8;border-radius:3px;overflow:hidden;margin-top:3px}
+.trkf{height:100%;border-radius:3px}
+.kpi-grp{border:0.5px solid var(--bd);border-radius:8px;overflow:hidden;margin-bottom:7px}
+.kpi-grp-hd{background:var(--or);padding:5px 11px;font-size:11px;font-weight:500;color:#fff;text-transform:uppercase;letter-spacing:.06em}
+.kpi-grp-bd{background:var(--cd);display:grid;gap:0}
+.kpi-grp .kc{border-radius:0;border:none;border-right:0.5px solid var(--bd);border-bottom:none}
+.kpi-grp .kc:last-child{border-right:none}
+.dt-btn{font-size:10px;padding:2px 8px;border-radius:4px;border:0.5px solid var(--or);background:#FAECE7;color:#993C1D;cursor:pointer;white-space:nowrap}
+.dt-btn:hover{background:#F5C4B3}
+.drill-btn{font-size:10px;padding:2px 8px;border-radius:4px;border:0.5px solid var(--bd);background:var(--cd);color:var(--t2);cursor:pointer}
+.donut-tab{font-size:11px;padding:3px 12px;border:0.5px solid var(--bd);cursor:pointer;color:var(--t2);background:var(--cd)}
+.donut-tab:first-child{border-radius:5px 0 0 5px}
+.donut-tab:last-child{border-radius:0 5px 5px 0}
+.donut-tab.on{background:var(--or);color:#fff;border-color:var(--or)}
+.donut-sec{display:none}.donut-sec.on{display:block}
+.comp-tgl{display:flex;gap:0;margin-bottom:5px}
+.comp-btn{font-size:11px;padding:3px 12px;border:0.5px solid var(--bd);cursor:pointer;color:var(--t2);background:var(--cd)}
+.comp-btn:first-child{border-radius:5px 0 0 5px}
+.comp-btn:last-child{border-radius:0 5px 5px 0}
+.comp-btn.on{background:var(--nv);color:#fff;border-color:var(--nv)}
+.pipe-card{background:var(--cd);border:0.5px solid var(--bd);border-radius:8px;padding:10px;text-align:center}
+.pipe-num{font-size:20px;font-weight:500;color:var(--t);line-height:1;margin-bottom:2px}
+.pipe-lbl{font-size:10px;color:var(--t2);line-height:1.3}
+.pipe-pct{font-size:11px;font-weight:500;margin-top:3px}
+.pipe-arrow{display:flex;align-items:center;justify-content:center;color:var(--t3);font-size:18px;flex-shrink:0;padding:0 2px}
+.gls-row{display:grid;grid-template-columns:180px 1fr;gap:0;border-bottom:0.5px solid var(--bd)}
+.gls-row:last-child{border-bottom:none}
+.gls-term{font-size:11px;font-weight:500;color:var(--t);padding:8px 10px;background:#F1EFE8;border-right:0.5px solid var(--bd)}
+.gls-def{font-size:11px;color:var(--t2);padding:8px 10px;line-height:1.5}
+</style>
+
+<div class="db">
+<div class="sb">
+  <div class="sb-hd">
+    <div class="sb-pages">Pages</div>
+  </div>
+  <div style="padding:6px 0;flex:1">
+    <div class="ni on" onclick="go(0,this)"><i class="ti ti-layout-dashboard" aria-hidden="true"></i>Executive Summary<span class="num">—</span></div>
+    <div class="ni" onclick="go(1,this)"><i class="ti ti-list-search" aria-hidden="true"></i>Current Openings<span class="num">1</span></div>
+    <div class="ni" onclick="go(2,this)"><i class="ti ti-users" aria-hidden="true"></i>New Hires<span class="num">2</span></div>
+    <div class="ni" onclick="go(3,this)"><i class="ti ti-currency-dollar" aria-hidden="true"></i>Cost &amp; Productivity<span class="num">3</span></div>
+    <div class="ni" onclick="go(4,this)"><i class="ti ti-git-branch" aria-hidden="true"></i>Delivery Summary<span class="num">4</span></div>
+    <div class="ni" onclick="go(5,this)"><i class="ti ti-book" aria-hidden="true"></i>Glossary<span class="num">5</span></div>
+  </div>
+  <div style="padding:8px 12px;border-top:0.5px solid rgba(255,255,255,.1)">
+    <div style="font-size:10px;color:rgba(255,255,255,.35)">Snapshot: 20 May 2026</div>
+  </div>
+</div>
+
+<div class="ct">
+<div class="hdr">
+  <div class="hdr-logo-block">
+    <div class="hdr-logo-tdcx">tdcx</div>
+    <div class="hdr-logo-sep"></div>
+    <div class="hdr-pg">
+      <div class="hdr-ta">Talent Acquisition</div>
+      <div class="hdr-title" id="pg-title">Executive Summary</div>
+    </div>
+  </div>
+  <div class="hdr-right">
+    <span class="badge" id="period-badge">Jan–May 2026 vs Jan–May 2025</span>
+    <span class="badge" style="background:#E1F5EE;color:#085041">Live</span>
+  </div>
+</div>
+
+<div class="main">
+<div class="panel">
+
+<!-- PAGE 0: EXECUTIVE SUMMARY -->
+<div class="pg on" id="p0">
+  <div class="kpi-grp">
+    <div class="kpi-grp-hd">Hiring status</div>
+    <div class="kpi-grp-bd" style="grid-template-columns:repeat(4,minmax(0,1fr))">
+      <div class="kc ok"><div class="kl">Total hires</div><div class="kv">342</div><div class="kd up">↑ 18% vs prior</div></div>
+      <div class="kc neu"><div class="kl">Total openings</div><div class="kv">124</div><div class="kd nm">Current open SRFs</div></div>
+      <div class="kc warn"><div class="kl">Median days open</div><div class="kv">32d</div><div class="kd up">↓ 4d vs prior</div></div>
+      <div class="kc warn"><div class="kl">Overdue requisitions</div><div class="kv">17</div><div class="kd dn">↑ 3 vs prior</div></div>
+    </div>
+  </div>
+  <div class="kpi-grp">
+    <div class="kpi-grp-hd">Hiring velocity</div>
+    <div class="kpi-grp-bd" style="grid-template-columns:repeat(3,minmax(0,1fr))">
+      <div class="kc ok"><div class="kl">On-time hiring</div><div class="kv">78%</div><div class="kd up">↑ 6pp · target 80%</div></div>
+      <div class="kc neu"><div class="kl">Median time-to-offer acceptance</div><div class="kv">18d</div><div class="kd up">↓ 4d vs prior</div></div>
+      <div class="kc neu"><div class="kl">Median time-to-onboard</div><div class="kv">29d</div><div class="kd up">↓ 6d vs prior</div></div>
+    </div>
+  </div>
+  <div class="kpi-grp">
+    <div class="kpi-grp-hd">Cost &amp; productivity</div>
+    <div class="kpi-grp-bd" style="grid-template-columns:repeat(3,minmax(0,1fr))">
+      <div class="kc neu"><div class="kl">Total recruitment cost</div><div class="kv">$284K</div><div class="kd nm">YTD · finance source</div></div>
+      <div class="kc ok"><div class="kl">Recruitment cost per hire</div><div class="kv">$830</div><div class="kd up">↓ $120 vs prior</div></div>
+      <div class="kc ok"><div class="kl">Recruiter productivity</div><div class="kv">8.6</div><div class="kd nm">hires / month / recruiter</div></div>
+    </div>
+  </div>
+  <div class="kpi-grp">
+    <div class="kpi-grp-hd">Hiring quality</div>
+    <div class="kpi-grp-bd" style="grid-template-columns:repeat(3,minmax(0,1fr))">
+      <div class="kc ok"><div class="kl">30-day attrition</div><div class="kv">4.2%</div><div class="kd up">↓ 0.8pp vs prior</div></div>
+      <div class="kc ok"><div class="kl">60-day attrition</div><div class="kv">6.8%</div><div class="kd up">↓ 1.1pp vs prior</div></div>
+      <div class="kc ok"><div class="kl">90-day attrition</div><div class="kv">8.3%</div><div class="kd up">↓ 2pp · below 10% target</div></div>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:8px">
+    <div class="card">
+      <div class="cht">On-time hiring &amp; lead time trends <button class="dt-btn" onclick="sendPrompt('Drill through: show me the list of hires for this period broken down by on-time status')">Drill through ↗</button></div>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:5px;font-size:11px;color:var(--t2)">
+        <span style="display:flex;align-items:center;gap:4px"><span style="width:9px;height:9px;border-radius:2px;background:#1D9E75"></span>On-time hiring % (left axis)</span>
+        <span style="display:flex;align-items:center;gap:4px"><span style="width:9px;height:9px;border-radius:2px;background:#E8621A;border:1.5px dashed #E8621A;background:transparent"></span>Time-to-offer acceptance, days (right axis)</span>
+        <span style="display:flex;align-items:center;gap:4px"><span style="width:9px;height:9px;border-radius:2px;background:transparent;border:1.5px dotted #BA7517"></span>Time-to-onboard, days (right axis)</span>
+      </div>
+      <div style="position:relative;height:120px"><canvas id="c0a" role="img" aria-label="On-time hiring and lead time dual axis chart Jan–May 2026">On-time: 68,71,76,80,78%. TT-offer: 22,21,20,19,18d. TT-onboard: 35,33,31,30,29d</canvas></div>
+    </div>
+    <div class="card">
+      <div class="cht">90-day attrition &amp; cost per hire <button class="dt-btn" onclick="sendPrompt('Drill through: show me the list of hires with their attrition status at 90 days')">Drill through ↗</button></div>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:5px;font-size:11px;color:var(--t2)">
+        <span style="display:flex;align-items:center;gap:4px"><span style="width:9px;height:9px;border-radius:2px;background:#378ADD"></span>90-day attrition % (left axis)</span>
+        <span style="display:flex;align-items:center;gap:4px"><span style="width:9px;height:9px;border-radius:2px;background:transparent;border:1.5px dashed #E8621A"></span>Cost per hire $ (right axis)</span>
+      </div>
+      <div style="position:relative;height:120px"><canvas id="c0b" role="img" aria-label="90-day attrition and cost per hire dual axis Jan–May 2026">Attrition: 10.3,9.8,9.4,8.8,8.3%. Cost: 950,900,850,800,770</canvas></div>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;margin-top:8px">
+    <div style="background:var(--cd);border:0.5px solid var(--bd);border-radius:8px;padding:10px;cursor:pointer" onclick="go(1,document.querySelectorAll('.ni')[1])">
+      <div style="width:22px;height:22px;border-radius:50%;background:#FAECE7;color:#993C1D;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;margin-bottom:5px">1</div>
+      <div style="font-size:12px;font-weight:500;color:var(--t);margin-bottom:2px">Current Openings</div>
+      <div style="font-size:11px;color:var(--t2)">Live SRF pipeline snapshot</div>
+      <div style="font-size:11px;color:var(--or);margin-top:5px">Go →</div>
+    </div>
+    <div style="background:var(--cd);border:0.5px solid var(--bd);border-radius:8px;padding:10px;cursor:pointer" onclick="go(2,document.querySelectorAll('.ni')[2])">
+      <div style="width:22px;height:22px;border-radius:50%;background:#E1F5EE;color:#085041;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;margin-bottom:5px">2</div>
+      <div style="font-size:12px;font-weight:500;color:var(--t);margin-bottom:2px">New Hires</div>
+      <div style="font-size:11px;color:var(--t2)">Hire composition &amp; quality</div>
+      <div style="font-size:11px;color:var(--or);margin-top:5px">Go →</div>
+    </div>
+    <div style="background:var(--cd);border:0.5px solid var(--bd);border-radius:8px;padding:10px;cursor:pointer" onclick="go(3,document.querySelectorAll('.ni')[3])">
+      <div style="width:22px;height:22px;border-radius:50%;background:#FAEEDA;color:#412402;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;margin-bottom:5px">3</div>
+      <div style="font-size:12px;font-weight:500;color:var(--t);margin-bottom:2px">Cost &amp; Productivity</div>
+      <div style="font-size:11px;color:var(--t2)">Spend &amp; recruiter output</div>
+      <div style="font-size:11px;color:var(--or);margin-top:5px">Go →</div>
+    </div>
+    <div style="background:var(--cd);border:0.5px solid var(--bd);border-radius:8px;padding:10px;cursor:pointer" onclick="go(4,document.querySelectorAll('.ni')[4])">
+      <div style="width:22px;height:22px;border-radius:50%;background:#EEEDFE;color:#26215C;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;margin-bottom:5px">4</div>
+      <div style="font-size:12px;font-weight:500;color:var(--t);margin-bottom:2px">Delivery Summary</div>
+      <div style="font-size:11px;color:var(--t2)">End-to-end SRF pipeline</div>
+      <div style="font-size:11px;color:var(--or);margin-top:5px">Go →</div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 1: CURRENT OPENINGS -->
+<div class="pg" id="p1">
+  <div style="background:#1A3A5C;border-radius:8px;padding:10px 14px;margin-bottom:9px">
+    <div style="font-size:10px;color:rgba(255,255,255,.4);margin-bottom:7px;text-transform:uppercase;letter-spacing:.06em;font-weight:500">Snapshot: as of yesterday</div>
+    <div style="display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:0">
+      <div style="text-align:center;padding:5px 7px;border-right:0.5px solid rgba(255,255,255,.15)">
+        <div style="font-size:10px;color:#85B7EB;margin-bottom:2px">Total open SRF</div>
+        <div style="font-size:20px;font-weight:500;color:#fff">2,973</div>
+      </div>
+      <div style="text-align:center;padding:5px 7px;border-right:0.5px solid rgba(255,255,255,.15)">
+        <div style="font-size:10px;color:#85B7EB;margin-bottom:2px">Balance to source</div>
+        <div style="font-size:20px;font-weight:500;color:#fff">1,913</div>
+      </div>
+      <div style="text-align:center;padding:5px 7px;border-right:0.5px solid rgba(255,255,255,.15)">
+        <div style="font-size:10px;color:#F09595;margin-bottom:2px">Overdue SRFs</div>
+        <div style="font-size:20px;font-weight:500;color:#F09595">1,234</div>
+      </div>
+      <div style="text-align:center;padding:5px 7px;border-right:0.5px solid rgba(255,255,255,.15)">
+        <div style="font-size:10px;color:#85B7EB;margin-bottom:2px">Median days open</div>
+        <div style="font-size:20px;font-weight:500;color:#fff">33.0d</div>
+      </div>
+      <div style="text-align:center;padding:5px 7px;border-right:0.5px solid rgba(255,255,255,.15)">
+        <div style="font-size:10px;color:#9FE1CB;margin-bottom:2px">Median LT to target onboard date</div>
+        <div style="font-size:20px;font-weight:500;color:#9FE1CB">41d</div>
+      </div>
+      <div style="text-align:center;padding:5px 7px">
+        <div style="font-size:10px;color:#FAC775;margin-bottom:2px">Recruiter workload</div>
+        <div style="font-size:20px;font-weight:500;color:#FAC775">7.4</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:9px">
+    <div style="background:var(--cd);border:0.5px solid var(--bd);border-radius:8px;padding:10px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:7px">
+        <div style="font-size:11px;font-weight:500;color:#fff;background:#E8621A;padding:3px 10px;border-radius:3px;text-transform:uppercase;letter-spacing:.05em">Funnel breakdown</div>
+        <button class="dt-btn" onclick="sendPrompt('Drill through: show me the full list of open SRFs with funnel stage details')">Drill through ↗</button>
+      </div>
+      <div style="overflow-x:auto">
+      <table class="tbl">
+        <thead><tr>
+          <th style="width:70px">Country</th>
+          <th class="r" style="width:50px">Open (A)</th>
+          <th class="r" style="width:56px">Pend. OB (B)</th>
+          <th class="r" style="width:50px">In offer (C)</th>
+          <th class="r" style="width:52px;background:#B5D4F4;color:#042C53">Bal. src (D)</th>
+        </tr></thead>
+        <tbody>
+          <tr><td>Brazil</td><td class="r">141</td><td class="r">134</td><td class="r">—</td><td class="r" style="background:#E6F1FB;color:#0C447C;font-weight:500">7</td></tr>
+          <tr><td>China</td><td class="r">29</td><td class="r">18</td><td class="r">—</td><td class="r" style="background:#E6F1FB;color:#0C447C;font-weight:500">18</td></tr>
+          <tr><td>India</td><td class="r">136</td><td class="r">85</td><td class="r">—</td><td class="r" style="background:#E6F1FB;color:#0C447C;font-weight:500">50</td></tr>
+          <tr><td>Japan</td><td class="r">112</td><td class="r">27</td><td class="r">—</td><td class="r" style="background:#E6F1FB;color:#0C447C;font-weight:500">65</td></tr>
+          <tr><td>Korea</td><td class="r">12</td><td class="r">4</td><td class="r">—</td><td class="r" style="background:#E6F1FB;color:#0C447C;font-weight:500">8</td></tr>
+          <tr><td>Malaysia</td><td class="r">1,363</td><td class="r">381</td><td class="r">120</td><td class="r" style="background:#E6F1FB;color:#0C447C;font-weight:500">862</td></tr>
+          <tr><td>Philippines</td><td class="r">982</td><td class="r">186</td><td class="r">8</td><td class="r" style="background:#E6F1FB;color:#0C447C;font-weight:500">788</td></tr>
+          <tr><td>Singapore</td><td class="r">76</td><td class="r">40</td><td class="r">—</td><td class="r" style="background:#E6F1FB;color:#0C447C;font-weight:500">36</td></tr>
+          <tr><td>Thailand</td><td class="r">84</td><td class="r">47</td><td class="r">—</td><td class="r" style="background:#E6F1FB;color:#0C447C;font-weight:500">37</td></tr>
+          <tr><td>Others</td><td class="r">38</td><td class="r">10</td><td class="r">—</td><td class="r" style="background:#E6F1FB;color:#0C447C;font-weight:500">42</td></tr>
+          <tr class="tot"><td>Total</td><td class="r">2,973</td><td class="r">932</td><td class="r">128</td><td class="r" style="background:#B5D4F4;color:#042C53">1,913</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <div class="note" style="margin-top:7px;margin-bottom:0;font-size:10px">D = A − B − C</div>
+    </div>
+
+    <div style="background:var(--cd);border:0.5px solid var(--bd);border-radius:8px;padding:10px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:7px">
+        <div style="font-size:11px;font-weight:500;color:#fff;background:#E8621A;padding:3px 10px;border-radius:3px;text-transform:uppercase;letter-spacing:.05em">Balance to source breakdown by target onboarding month</div>
+        <button class="dt-btn" onclick="sendPrompt('Drill through: show me all SRFs with overdue target onboarding dates')">Drill through ↗</button>
+      </div>
+      <div style="overflow-x:auto">
+      <table class="tbl">
+        <thead><tr>
+          <th style="width:82px">Country</th>
+          <th class="r" style="width:46px;color:#A32D2D">Overdue</th>
+          <th class="r" style="width:40px">May-26</th>
+          <th class="r" style="width:40px">Jun-26</th>
+          <th class="r" style="width:40px">Jul-26</th>
+          <th class="r" style="width:40px">Aug-26</th>
+          <th class="r" style="width:40px">Sep-26</th>
+        </tr></thead>
+        <tbody>
+          <tr><td>🇧🇷 BRA</td><td class="r" style="color:#A32D2D;font-weight:500">5</td><td class="r">6</td><td class="r">0</td><td class="r">0</td><td class="r">1</td><td class="r">—</td></tr>
+          <tr><td>🇨🇳 CHN</td><td class="r" style="color:#A32D2D;font-weight:500">4</td><td class="r">5</td><td class="r">8</td><td class="r">1</td><td class="r">—</td><td class="r">—</td></tr>
+          <tr><td>🇮🇳 IND</td><td class="r">0</td><td class="r">1</td><td class="r">3</td><td class="r">—</td><td class="r">—</td><td class="r">—</td></tr>
+          <tr><td>🇯🇵 JPN</td><td class="r" style="color:#A32D2D;font-weight:500">45</td><td class="r">5</td><td class="r">0</td><td class="r">—</td><td class="r">—</td><td class="r">—</td></tr>
+          <tr><td>🇰🇷 KOR</td><td class="r" style="color:#A32D2D;font-weight:500">30</td><td class="r">25</td><td class="r">30</td><td class="r">—</td><td class="r">—</td><td class="r">—</td></tr>
+          <tr><td>🇲🇾 MYS</td><td class="r">5</td><td class="r">1</td><td class="r">2</td><td class="r">—</td><td class="r">—</td><td class="r">—</td></tr>
+          <tr><td>🇵🇭 PHL</td><td class="r" style="color:#A32D2D;font-weight:500">565</td><td class="r">74</td><td class="r">126</td><td class="r">85</td><td class="r">12</td><td class="r">0</td></tr>
+          <tr><td>🇸🇬 SGP</td><td class="r">3</td><td class="r">1</td><td class="r">—</td><td class="r">—</td><td class="r">—</td><td class="r">—</td></tr>
+          <tr><td>🇹🇭 THA</td><td class="r" style="color:#A32D2D;font-weight:500">31</td><td class="r">2</td><td class="r">4</td><td class="r">—</td><td class="r">—</td><td class="r">—</td></tr>
+          <tr><td>Others</td><td class="r">11</td><td class="r">9</td><td class="r">6</td><td class="r">4</td><td class="r">—</td><td class="r">—</td></tr>
+          <tr class="tot"><td>Total</td><td class="r" style="color:#A32D2D">1,234</td><td class="r">264</td><td class="r">312</td><td class="r">90</td><td class="r">13</td><td class="r">0</td></tr>
+          <tr class="pct-row"><td style="font-style:italic">% of bal. to source</td><td class="r" style="color:#A32D2D">64.5%</td><td class="r">13.8%</td><td class="r">16.3%</td><td class="r">4.7%</td><td class="r">0.7%</td><td class="r">0.0%</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px">
+    <div class="card">
+      <div class="cht">New openings L7d vs new hires onboarded L7d <button class="dt-btn" onclick="sendPrompt('Drill through: show me the list of SRFs opened and closed in the last 7 days')">Drill through ↗</button></div>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:5px;font-size:11px;color:var(--t2)">
+        <span style="display:flex;align-items:center;gap:4px"><span style="width:9px;height:9px;border-radius:2px;background:#E8621A"></span>New openings L7d</span>
+        <span style="display:flex;align-items:center;gap:4px"><span style="width:9px;height:9px;border-radius:2px;background:#1D9E75"></span>New hires onboarded L7d</span>
+      </div>
+      <div style="position:relative;height:120px"><canvas id="c1a" role="img" aria-label="New openings and new hires onboarded last 7 days by country">PHL 110 new, 0 onboarded. MYS 84 new, 0 onboarded. THA 29 new, 0 onboarded. IND 11 new, 0 onboarded. CHN 0 new, 2 onboarded</canvas></div>
+    </div>
+    <div class="card">
+      <div class="cht">Median hiring lead time — open SRFs by country <button class="dt-btn" onclick="sendPrompt('Drill through: show me the full list of open SRFs sorted by hiring lead time descending')">Drill through ↗</button></div>
+      <div style="position:relative;height:120px"><canvas id="c1b" role="img" aria-label="Median hiring lead time by country for open SRFs">CHN 57d, JPN 29d, KOR 32d, MYS 36d, PHL 36d, SGP 32d, THA 24d, IND 17d, BRA 13d</canvas></div>
+      <div style="font-size:10px;color:var(--t2);margin-top:5px;line-height:1.4">&#9432; Bar shade indicates urgency: dark blue &gt;40d, amber 31–40d, teal ≤30d.</div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 2: NEW HIRES -->
+<div class="pg" id="p2">
+  <div style="display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px;margin-bottom:9px">
+    <div class="kc ok">
+      <div class="kl">Total hires</div>
+      <div class="kv">342</div>
+      <div style="font-size:11px;color:var(--t2);margin-top:1px">External: <span style="font-weight:500;color:var(--t)">298</span></div>
+      <div class="kd up">↑ 18% vs prior</div>
+    </div>
+    <div class="kc ok"><div class="kl">On-time hiring</div><div class="kv">78%</div><div class="kd up">↑ 6pp · target 80%</div></div>
+    <div class="kc neu"><div class="kl">Median time-to-offer acceptance</div><div class="kv">18d</div><div class="kd up">↓ 4d vs prior</div></div>
+    <div class="kc neu"><div class="kl">Median time-to-onboard</div><div class="kv">29d</div><div class="kd up">↓ 6d vs prior</div></div>
+    <div class="kc neu"><div class="kl">Throughput</div><div class="kv">68.4</div><div class="kd nm">hires/month avg</div></div>
+    <div class="kc neu"><div class="kl">Median LT to target onboard date</div><div class="kv">41d</div><div class="kd up">↓ 6d vs prior</div></div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:9px">
+    <div class="card">
+      <div class="cht">Source of hire <button class="dt-btn" onclick="sendPrompt('Drill through: show me the list of external hires with their source channel')">Drill through ↗</button></div>
+      <div style="display:flex;gap:12px;align-items:center">
+        <div style="position:relative;width:120px;height:120px;flex-shrink:0"><canvas id="c2-soh" role="img" aria-label="Source of hire donut. Career site 35%, Direct sourcing 17%, Employee referral 10%, Social media 8%, Agency 6%, Others 24%">Career site 35%, Direct sourcing 17%, Employee referral 10%, Social media 8%, Agency 6%, Others 24%</canvas></div>
+        <div id="soh-det" style="flex:1;font-size:11px;color:var(--t2);line-height:1.9"></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="cht">Early attrition — 30 / 60 / 90-day <span class="pill p-ok">all below 10% target</span> <button class="dt-btn" onclick="sendPrompt('Drill through: show me the list of hires who left within 90 days')">Drill through ↗</button></div>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:5px;font-size:11px;color:var(--t2)">
+        <span style="display:flex;align-items:center;gap:4px"><span style="width:9px;height:9px;border-radius:2px;background:#378ADD"></span>30-day attrition %</span>
+        <span style="display:flex;align-items:center;gap:4px"><span style="width:9px;height:9px;border-radius:2px;background:transparent;border:1.5px dashed #BA7517"></span>60-day attrition %</span>
+        <span style="display:flex;align-items:center;gap:4px"><span style="width:9px;height:9px;border-radius:2px;background:transparent;border:1.5px dotted #534AB7"></span>90-day attrition %</span>
+      </div>
+      <div style="position:relative;height:105px"><canvas id="c2-att" role="img" aria-label="30 60 90 day attrition trend Jan–May 2026">30d: 5,4.8,4.5,4.3,4.2. 60d: 7.9,7.5,7.2,7,6.8. 90d: 10.3,9.8,9.4,8.8,8.3</canvas></div>
+    </div>
+  </div>
+  <div class="sh">Hire breakdown by dimension</div>
+  <div class="tgl" id="dim-tgl">
+    <button class="on" onclick="setDim('country',this)">Country</button>
+    <button onclick="setDim('entity',this)">Entity</button>
+    <button onclick="setDim('project',this)">Project</button>
+    <button onclick="setDim('grade',this)">Job grade</button>
+    <button onclick="setDim('nature',this)">Job nature</button>
+  </div>
+  <div class="card">
+    <div style="display:flex;justify-content:flex-end;align-items:center;margin-bottom:8px">
+      <button class="dt-btn" onclick="sendPrompt('Drill through: show me the full hire breakdown raw data for the selected dimension')">Drill through ↗</button>
+    </div>
+    <div id="mx-col-hdrs" style="display:flex;align-items:center;gap:3px;margin-bottom:5px;padding-left:90px"></div>
+    <div class="sec on" id="dim-country"><div id="mx-country"></div></div>
+    <div class="sec" id="dim-entity"><div id="mx-entity"></div></div>
+    <div class="sec" id="dim-project"><div id="mx-project"></div></div>
+    <div class="sec" id="dim-grade"><div id="mx-grade"></div></div>
+    <div class="sec" id="dim-nature"><div id="mx-nature"></div></div>
+  </div>
+</div>
+
+<!-- PAGE 3: COST & PRODUCTIVITY -->
+<div class="pg" id="p3">
+  <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-bottom:7px">
+    <div class="kc neu"><div class="kl">Total recruitment cost</div><div class="kv">$284K</div><div class="kd nm">YTD · finance</div></div>
+    <div class="kc ok"><div class="kl">Recruitment cost per hire</div><div class="kv">$830</div><div class="kd up">↓ $120 vs prior</div></div>
+    <div class="kc warn"><div class="kl">Recruiter workload</div><div class="kv">7.4</div><div class="kd nm">open SRF / recruiter</div></div>
+    <div class="kc ok"><div class="kl">Recruiter productivity</div><div class="kv">8.6</div><div class="kd nm">hires / month / recruiter</div></div>
+  </div>
+  <div class="note">Workload = balance to source ÷ TA resources · Productivity = external hires closed ÷ TA headcount · Project-level cost data unavailable</div>
+  <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:8px">
+    <div class="card">
+      <div class="cht">Recruitment cost per hire — monthly trend <button class="dt-btn" onclick="sendPrompt('Drill through: show me the cost breakdown per hire by country for this period')">Drill through ↗</button></div>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:5px;font-size:11px;color:var(--t2)">
+        <span style="display:flex;align-items:center;gap:4px"><span style="width:9px;height:9px;border-radius:2px;background:#E8621A"></span>Cost per hire 2026 ($)</span>
+        <span style="display:flex;align-items:center;gap:4px"><span style="width:9px;height:9px;border-radius:2px;background:#B4B2A9"></span>Prior year ($)</span>
+      </div>
+      <div style="position:relative;height:130px"><canvas id="c3-cph" role="img" aria-label="Cost per hire monthly Jan–May 2026">Jan 950, Feb 900, Mar 850, Apr 800, May 770</canvas></div>
+    </div>
+    <div class="card">
+      <div class="cht">Cost breakdown <button class="dt-btn" onclick="sendPrompt('Drill through: show me the line-item cost breakdown')">Drill through ↗</button></div>
+      <div style="display:flex;gap:0;margin-bottom:8px">
+        <div class="donut-tab on" onclick="switchDonut('cat',this)">By category</div>
+        <div class="donut-tab" onclick="switchDonut('ctry',this)">By country</div>
+      </div>
+      <div class="donut-sec on" id="donut-cat">
+        <div style="display:flex;gap:12px;align-items:center">
+          <div style="position:relative;width:110px;height:110px;flex-shrink:0"><canvas id="c3-cat" role="img" aria-label="Cost by category donut. Agency 55%, Job boards 32%, Referral 13%">Agency 55%, Job boards 32%, Referral 13%</canvas></div>
+          <div id="cat-det" style="flex:1;font-size:11px;color:var(--t2);line-height:1.9"></div>
+        </div>
+      </div>
+      <div class="donut-sec" id="donut-ctry">
+        <div style="display:flex;gap:12px;align-items:center">
+          <div style="position:relative;width:110px;height:110px;flex-shrink:0"><canvas id="c3-ctry" role="img" aria-label="Cost by country donut. Philippines 31%, Malaysia 23%, Singapore 18%, Others 28%">Philippines 31%, Malaysia 23%, Singapore 18%, Others 28%</canvas></div>
+          <div id="ctry-det" style="flex:1;font-size:11px;color:var(--t2);line-height:1.9"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="cht">Recruiter workload (open) vs productivity (closed) <button class="dt-btn" onclick="sendPrompt('Drill through: show me recruiter-level workload and productivity data')">Drill through ↗</button></div>
+    <div class="tgl" id="wp-tgl">
+      <button class="on" onclick="setWP('country',this)">By country</button>
+      <button onclick="setWP('month',this)">By month trend</button>
+    </div>
+    <div class="sec on" id="wp-country"><div id="mx-wp"></div></div>
+    <div class="sec" id="wp-month">
+      <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:5px;font-size:11px;color:var(--t2)">
+        <span style="display:flex;align-items:center;gap:4px"><span style="width:9px;height:9px;border-radius:2px;background:#E8621A"></span>Workload (open)</span>
+        <span style="display:flex;align-items:center;gap:4px"><span style="width:9px;height:9px;border-radius:2px;background:transparent;border:1.5px dashed #1D9E75"></span>Productivity (closed)</span>
+      </div>
+      <div style="position:relative;height:130px"><canvas id="c3-wp" role="img" aria-label="Workload vs productivity monthly Jan–May 2026">Workload 8.2,8.5,7.8,7.4,7.4. Productivity 7.2,7.8,8.2,8.6,8.6</canvas></div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 4: DELIVERY SUMMARY -->
+<div class="pg" id="p4">
+  <div class="sh" style="margin-top:0">End-to-end SRF pipeline — Jan to May 2026</div>
+  <div style="display:flex;align-items:center;gap:4px;margin-bottom:10px;overflow-x:auto">
+    <div class="pipe-card" style="flex:1;min-width:90px"><div class="pipe-lbl">SRFs approved</div><div class="pipe-num" style="color:#E8621A">2,973</div><div class="pipe-pct" style="color:#888780">Start</div></div>
+    <div class="pipe-arrow">→</div>
+    <div class="pipe-card" style="flex:1;min-width:90px"><div class="pipe-lbl">Sourcing started</div><div class="pipe-num" style="color:#F5864A">2,540</div><div class="pipe-pct" style="color:#1D9E75">85% of approved</div></div>
+    <div class="pipe-arrow">→</div>
+    <div class="pipe-card" style="flex:1;min-width:90px"><div class="pipe-lbl">Screening</div><div class="pipe-num" style="color:#BA7517">1,820</div><div class="pipe-pct" style="color:#1D9E75">72% of sourced</div></div>
+    <div class="pipe-arrow">→</div>
+    <div class="pipe-card" style="flex:1;min-width:90px"><div class="pipe-lbl">Interviews</div><div class="pipe-num" style="color:#BA7517">980</div><div class="pipe-pct" style="color:#BA7517">54% of screened</div></div>
+    <div class="pipe-arrow">→</div>
+    <div class="pipe-card" style="flex:1;min-width:90px"><div class="pipe-lbl">Offers approved</div><div class="pipe-num" style="color:#1D9E75">412</div><div class="pipe-pct" style="color:#BA7517">42% of interviewed</div></div>
+    <div class="pipe-arrow">→</div>
+    <div class="pipe-card" style="flex:1;min-width:90px"><div class="pipe-lbl">Offers accepted</div><div class="pipe-num" style="color:#1D9E75">376</div><div class="pipe-pct" style="color:#1D9E75">91% accept rate</div></div>
+    <div class="pipe-arrow">→</div>
+    <div class="pipe-card" style="flex:1;min-width:90px;border-left:2px solid #1D9E75"><div class="pipe-lbl">Onboarded</div><div class="pipe-num" style="color:#085041">342</div><div class="pipe-pct" style="color:#1D9E75">91% of accepted</div></div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:8px">
+    <div class="card">
+      <div class="cht">SRF count by status &amp; job posting type <button class="dt-btn" onclick="sendPrompt('Drill through: show me the full SRF list with status and job posting type')">Drill through ↗</button></div>
+      <div style="font-size:11px;font-weight:500;color:var(--t2);margin-bottom:5px">By status</div>
+      <div class="br"><div class="bl">Open / active</div><div class="bt"><div class="bf" style="width:78%;background:#E8621A"></div></div><div class="bv">2,317</div></div>
+      <div class="br"><div class="bl">Pending approval</div><div class="bt"><div class="bf" style="width:20%;background:#BA7517"></div></div><div class="bv">412</div></div>
+      <div class="br"><div class="bl">On hold</div><div class="bt"><div class="bf" style="width:8%;background:#888780"></div></div><div class="bv">244</div></div>
+      <div style="border-top:0.5px solid var(--bd);margin:7px 0 5px"></div>
+      <div style="font-size:11px;font-weight:500;color:var(--t2);margin-bottom:5px">By job posting type</div>
+      <div class="br"><div class="bl">External</div><div class="bt"><div class="bf" style="width:82%;background:#1D9E75"></div></div><div class="bv">2,438</div></div>
+      <div class="br"><div class="bl">Internal</div><div class="bt"><div class="bf" style="width:18%;background:#378ADD"></div></div><div class="bv">535</div></div>
+    </div>
+    <div class="card">
+      <div class="cht">Source of application <button class="dt-btn" onclick="sendPrompt('Drill through: show me applicant count by source and country')">Drill through ↗</button></div>
+      <div style="display:flex;gap:12px;align-items:center">
+        <div style="position:relative;width:120px;height:120px;flex-shrink:0"><canvas id="c4-soa" role="img" aria-label="Source of application donut. Career site 38%, Direct sourcing 18%, Employee referral 14%, Social media 12%, Agency 8%, Others 10%">Career site 38%, Direct sourcing 18%, Employee referral 14%, Social media 12%, Agency 8%, Others 10%</canvas></div>
+        <div id="soa-det" style="flex:1;font-size:11px;color:var(--t2);line-height:1.9"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:8px">
+    <div class="cht">Pipeline details by stage — SRF count and median lead time <button class="dt-btn" onclick="sendPrompt('Drill through: show me the SRF list grouped by pipeline stage with lead times')">Drill through ↗</button></div>
+    <div style="display:flex;align-items:center;gap:4px;margin-bottom:5px;padding-left:102px">
+      <div style="flex:1;text-align:center;font-size:11px;font-weight:500;color:#E8621A">Number of SRFs</div>
+      <div style="flex:1;text-align:center;font-size:11px;font-weight:500;color:#1D9E75">Median lead time (days)</div>
+    </div>
+    <div id="mx-pipeline"></div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px">
+    <div class="card">
+      <div class="cht">SRF to be reassigned — inactive recruiter <button class="drill-btn">Drill all</button></div>
+      <table class="tbl">
+        <thead><tr><th style="width:58px">Country</th><th>Recruiter name</th><th>Email</th><th class="r" style="width:50px">SRF count</th></tr></thead>
+        <tbody>
+          <tr><td>🇵🇭 PHL</td><td>Ana Reyes</td><td style="font-size:10px;color:var(--t2)">a.reyes@tdcx.com</td><td class="r">23</td></tr>
+          <tr><td>🇲🇾 MYS</td><td>Farah Lim</td><td style="font-size:10px;color:var(--t2)">f.lim@tdcx.com</td><td class="r">14</td></tr>
+          <tr><td>🇯🇵 JPN</td><td>Kenji Ota</td><td style="font-size:10px;color:var(--t2)">k.ota@tdcx.com</td><td class="r">9</td></tr>
+          <tr><td>🇮🇳 IND</td><td>Priya Singh</td><td style="font-size:10px;color:var(--t2)">p.singh@tdcx.com</td><td class="r">7</td></tr>
+          <tr class="tot"><td colspan="3">Total</td><td class="r">53</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <div class="cht">Candidate pipeline <button class="drill-btn">Drill all</button></div>
+      <table class="tbl">
+        <thead><tr><th>Stage</th><th class="r" style="width:80px">No. of candidates</th></tr></thead>
+        <tbody>
+          <tr><td>Applied</td><td class="r">4,820</td></tr>
+          <tr><td>Screening</td><td class="r">2,140</td></tr>
+          <tr><td>Interview</td><td class="r">980</td></tr>
+          <tr><td>Assessment</td><td class="r">520</td></tr>
+          <tr><td>Offer stage</td><td class="r">238</td></tr>
+          <tr><td>Offer approved</td><td class="r">217</td></tr>
+          <tr class="tot"><td>Onboarded</td><td class="r">342</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 5: GLOSSARY -->
+<div class="pg" id="p5">
+  <div class="note">All metric definitions below apply consistently across all pages of this dashboard. Where a target is defined, it is shown alongside the metric on the relevant page.</div>
+  <div class="sh">Hiring status</div>
+  <div class="card" style="padding:0;overflow:hidden;margin-bottom:8px">
+    <div class="gls-row"><div class="gls-term">Total hires</div><div class="gls-def">Total number of candidates who have been onboarded in the selected period, including both external and internal hires.</div></div>
+    <div class="gls-row"><div class="gls-term">Total openings</div><div class="gls-def">Total number of currently open Staff Requisition Forms (SRFs) that have been approved and are actively being worked on. Also referred to as "Total open SRF".</div></div>
+    <div class="gls-row"><div class="gls-term">Median days open</div><div class="gls-def">The median number of days that current open SRFs have been open, measured from SRF approval date to today's snapshot date. Uses the median (not average) to reduce the impact of extreme outliers.</div></div>
+    <div class="gls-row"><div class="gls-term">Overdue requisitions</div><div class="gls-def">SRFs where today's snapshot date has passed the target onboarding date and the position has not yet been filled.</div></div>
+    <div class="gls-row"><div class="gls-term">Balance to source</div><div class="gls-def">The number of open SRFs that still require active sourcing. Formula: Current openings (A) − HC pending onboarding (B) − HC in offer process (C). Also the key measure of recruiter workload.</div></div>
+  </div>
+  <div class="sh">Hiring velocity</div>
+  <div class="card" style="padding:0;overflow:hidden;margin-bottom:8px">
+    <div class="gls-row"><div class="gls-term">On-time hiring</div><div class="gls-def">Percentage of hires who were onboarded on or before their target onboarding date. Formula: hires on/before target date ÷ total hires × 100. KPI target: ≥80%.</div></div>
+    <div class="gls-row"><div class="gls-term">Median time-to-offer acceptance</div><div class="gls-def">The median number of working days from SRF approval date to the date the candidate accepted the offer. Weekends are excluded; public holidays are included.</div></div>
+    <div class="gls-row"><div class="gls-term">Median time-to-onboard</div><div class="gls-def">The median number of working days from SRF approval date to the candidate's actual onboarding date. Weekends are excluded; public holidays are included.</div></div>
+    <div class="gls-row"><div class="gls-term">Throughput</div><div class="gls-def">Average number of hires completed per calendar month in the selected period. Formula: total hires ÷ number of months in the period.</div></div>
+    <div class="gls-row"><div class="gls-term">Median LT to target onboard date</div><div class="gls-def">The median number of working days from SRF approval date to the SRF's target onboarding date. This is a forward-looking lead time for open SRFs, indicating urgency of sourcing. Uses the close SRF data source.</div></div>
+  </div>
+  <div class="sh">Cost &amp; productivity</div>
+  <div class="card" style="padding:0;overflow:hidden;margin-bottom:8px">
+    <div class="gls-row"><div class="gls-term">Total recruitment cost</div><div class="gls-def">Total spend on external recruitment activities in the selected period, sourced from Finance. Includes agency fees, job board subscriptions, and employee referral bonuses. Does not include internal TA team salaries.</div></div>
+    <div class="gls-row"><div class="gls-term">Recruitment cost per hire</div><div class="gls-def">Total recruitment cost ÷ number of external hires in the selected period. Also referred to as cost per hire. KPI metric tracked against prior period.</div></div>
+    <div class="gls-row"><div class="gls-term">Recruiter productivity</div><div class="gls-def">Number of external hires closed ÷ number of TA resources, expressed per month. Measures the output rate of the recruiting team. Source: Flash Home.</div></div>
+    <div class="gls-row"><div class="gls-term">Recruiter workload</div><div class="gls-def">Balance to source ÷ number of TA resources. Measures the average number of open SRFs being actively sourced per recruiter at any point in time. Source: TA Hire Summary dashboard.</div></div>
+  </div>
+  <div class="sh">Hiring quality</div>
+  <div class="card" style="padding:0;overflow:hidden;margin-bottom:8px">
+    <div class="gls-row"><div class="gls-term">30-day attrition</div><div class="gls-def">Percentage of hires who left the organisation within 30 days of their onboarding date. Formula: hires who left within 30 days ÷ total hires × 100. Source: Attrition dashboard.</div></div>
+    <div class="gls-row"><div class="gls-term">60-day attrition</div><div class="gls-def">Percentage of hires who left the organisation within 60 days of their onboarding date.</div></div>
+    <div class="gls-row"><div class="gls-term">90-day attrition</div><div class="gls-def">Percentage of hires who left the organisation within 90 days of their onboarding date. KPI target: below 10%.</div></div>
+    <div class="gls-row"><div class="gls-term">No show rate</div><div class="gls-def">Percentage of confirmed joiners who did not report for work on their onboarding date. Formula: candidates who did not report ÷ total confirmed joiners × 100. Source: Flash Home.</div></div>
+    <div class="gls-row"><div class="gls-term">Offer acceptance rate</div><div class="gls-def">Percentage of offers that were accepted by candidates. Formula: offers accepted ÷ offers extended × 100. Source: Flash Home.</div></div>
+  </div>
+  <div class="sh">SRF pipeline</div>
+  <div class="card" style="padding:0;overflow:hidden;margin-bottom:8px">
+    <div class="gls-row"><div class="gls-term">SRF</div><div class="gls-def">Staff Requisition Form. The formal request to hire a new or replacement headcount, which must be approved before sourcing begins.</div></div>
+    <div class="gls-row"><div class="gls-term">HC pending onboarding (B)</div><div class="gls-def">Headcount where an offer has been accepted and the candidate is confirmed to join, but has not yet started. These SRFs are effectively closed for sourcing purposes.</div></div>
+    <div class="gls-row"><div class="gls-term">HC in offer process (C)</div><div class="gls-def">Headcount where an offer is currently being prepared or has been extended but not yet accepted or declined.</div></div>
+    <div class="gls-row"><div class="gls-term">Target onboarding date</div><div class="gls-def">The date by which the hired candidate is expected to join, as specified in the SRF at the time of approval. Used to calculate on-time hiring and median lead time to target onboarding date.</div></div>
+    <div class="gls-row"><div class="gls-term">New openings L7d</div><div class="gls-def">Number of new SRFs that were approved and entered the hiring funnel in the last 7 days. Signals demand addition to the pipeline.</div></div>
+    <div class="gls-row"><div class="gls-term">New hires onboarded L7d</div><div class="gls-def">Number of SRFs that were closed by a successful onboarding in the last 7 days. Signals removal from the pipeline.</div></div>
+  </div>
+  <div class="sh">Data sources</div>
+  <div class="card" style="padding:0;overflow:hidden">
+    <div class="gls-row"><div class="gls-term">TA dashboard</div><div class="gls-def">Primary Power BI dashboard. Source for on-time hiring and time-to-offer acceptance metrics.</div></div>
+    <div class="gls-row"><div class="gls-term">TA Hire Summary</div><div class="gls-def">Weekly snapshot dashboard used for total openings, balance to source, and average hiring time. Designed for weekly management screenshots and reporting.</div></div>
+    <div class="gls-row"><div class="gls-term">Flash Home</div><div class="gls-def">Internal TDCX operations dashboard. Source for recruiter productivity, no show rate, offer acceptance rate, and median lead time to target onboard date.</div></div>
+    <div class="gls-row"><div class="gls-term">Attrition dashboard</div><div class="gls-def">Dedicated attrition tracking dashboard. Source for 30-, 60-, and 90-day attrition metrics.</div></div>
+    <div class="gls-row"><div class="gls-term">Finance</div><div class="gls-def">Finance team data. Source for total recruitment cost figures. Project-level cost data not currently available.</div></div>
+    <div class="gls-row"><div class="gls-term">BigQuery</div><div class="gls-def">Backend data warehouse. Historical snapshot data for current openings page is pending BigQuery integration, at which point date filters will be enabled for that page.</div></div>
+  </div>
+</div>
+
+</div>
+
+<!-- RIGHT RAIL -->
+<div class="rail">
+  <div class="sl-h">Comparison mode</div>
+  <div class="comp-tgl">
+    <div class="comp-btn on" onclick="setComp('prior',this)">Prior period</div>
+    <div class="comp-btn" onclick="setComp('lastyear',this)">Same period LY</div>
+  </div>
+  <div id="comp-note" style="font-size:10px;color:var(--t2);margin-bottom:8px;line-height:1.5">Comparing against the same duration immediately preceding the actual period.</div>
+  <div class="sl-h">Actual period</div>
+  <div class="dl">Start</div><input type="date" value="2026-01-01" id="act-start" onchange="updateComp()">
+  <div class="dl">End</div><input type="date" value="2026-05-20" id="act-end" onchange="updateComp()">
+  <div class="sl-h">Comparison period</div>
+  <div class="dl">Start</div><input type="date" value="2025-08-15" id="cmp-start" style="background:#E6F1FB;color:#0C447C" onchange="onCmpManual()">
+  <div class="dl">End</div><input type="date" value="2026-01-01" id="cmp-end" style="background:#E6F1FB;color:#0C447C" onchange="onCmpManual()">
+  <div id="cmp-note-sub" style="font-size:10px;color:var(--t2);margin-bottom:4px;line-height:1.4">Auto-calculated — editable override allowed</div>
+  <button id="cmp-reset-btn" onclick="resetCmp()" style="display:none;font-size:10px;padding:2px 8px;border-radius:4px;border:0.5px solid var(--bd);background:#F1EFE8;color:var(--t2);cursor:pointer;margin-bottom:6px;width:100%">&#8635; Reset to auto</button>
+  <div class="sl-h">Country</div>
+  <select><option>All countries</option><option>Philippines</option><option>Singapore</option><option>Malaysia</option><option>Thailand</option><option>India</option><option>Japan</option><option>Korea</option><option>China</option><option>Vietnam</option><option>Colombia</option><option>Brazil</option><option>Europe</option></select>
+  <div class="sl-h">Entity</div>
+  <select><option>All entities</option><option>TDCX Malaysia</option><option>TDCX Philippines</option><option>TDCX Singapore</option><option>TDCX Thailand</option></select>
+  <div class="sl-h">Department</div>
+  <select><option>All departments</option><option>Operations</option><option>Technology</option><option>Finance</option><option>HR</option><option>Sales</option></select>
+  <div class="sl-h">Project</div>
+  <select><option>All projects</option><option>Project Alpha</option><option>Project Beta</option><option>Project Gamma</option></select>
+  <div class="sl-h">Functional unit</div>
+  <select><option>All units</option><option>BPO</option><option>Tech</option><option>Corporate</option></select>
+  <div id="r-hire-type" style="display:none">
+    <div class="sl-h">Hire type</div>
+    <select><option>All</option><option>External</option><option>Internal</option></select>
+  </div>
+  <div id="r-srf-slicers" style="display:none">
+    <div class="sl-h">SRF status</div>
+    <select><option>All</option><option>Open</option><option>Pending approval</option><option>On hold</option></select>
+    <div class="sl-h">Job posting type</div>
+    <select><option>All</option><option>External</option><option>Internal</option></select>
+  </div>
+</div>
+</div>
+</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+const TITLES=["Executive Summary","Current Opening Summary","New Hires Summary","Cost & Productivity Summary","Recruitment Delivery Summary","Glossary"];
+const MO=['Jan','Feb','Mar','Apr','May'];
+const GC='rgba(0,0,0,0.06)',TC='#888780';
+let compMode='prior';
+
+function go(n,el){
+  document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.ni').forEach(i=>i.classList.remove('on'));
+  document.getElementById('p'+n).classList.add('on');
+  el.classList.add('on');
+  document.getElementById('pg-title').textContent=TITLES[n];
+  document.getElementById('r-hire-type').style.display=n===2?'block':'none';
+  document.getElementById('r-srf-slicers').style.display=n===4?'block':'none';
+}
+
+function setComp(mode,btn){
+  compMode=mode;
+  document.querySelectorAll('.comp-btn').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  updateComp();
+}
+
+function updateComp(){
+  const aStart=document.getElementById('act-start').value;
+  const aEnd=document.getElementById('act-end').value;
+  if(!aStart||!aEnd)return;
+  const s=new Date(aStart),e=new Date(aEnd);
+  const durMs=e-s;
+  let cs,ce;
+  if(compMode==='prior'){
+    ce=new Date(s-1);
+    cs=new Date(ce-durMs);
+  } else {
+    cs=new Date(s);cs.setFullYear(cs.getFullYear()-1);
+    ce=new Date(e);ce.setFullYear(ce.getFullYear()-1);
+  }
+  document.getElementById('cmp-start').value=cs.toISOString().split('T')[0];
+  document.getElementById('cmp-end').value=ce.toISOString().split('T')[0];
+  document.getElementById('comp-note').textContent=compMode==='prior'?'Comparing against the same duration immediately preceding the actual period.':'Comparing against the same calendar dates one year prior.';
+  const fmt=d=>d.toLocaleString('default',{month:'short',year:'numeric'});
+  document.getElementById('period-badge').textContent=`${fmt(s)}–${fmt(e)} vs ${fmt(cs)}–${fmt(ce)}`;
+}
+updateComp();
+
+let cmpManualOverride = false;
+function onCmpManual() {
+  cmpManualOverride = true;
+  document.getElementById('cmp-reset-btn').style.display = 'block';
+  document.getElementById('cmp-note-sub').textContent = 'Manually overridden — auto-calculation paused';
+  document.getElementById('cmp-note-sub').style.color = '#BA7517';
+  // Update badge with manually set dates
+  const aStart = document.getElementById('act-start').value;
+  const aEnd = document.getElementById('act-end').value;
+  const cs = document.getElementById('cmp-start').value;
+  const ce = document.getElementById('cmp-end').value;
+  if (aStart && aEnd && cs && ce) {
+    const fmt = d => new Date(d).toLocaleString('default', {month: 'short', year: 'numeric'});
+    document.getElementById('period-badge').textContent = `${fmt(aStart)}–${fmt(aEnd)} vs ${fmt(cs)}–${fmt(ce)}`;
+  }
+}
+function resetCmp() {
+  cmpManualOverride = false;
+  document.getElementById('cmp-reset-btn').style.display = 'none';
+  document.getElementById('cmp-note-sub').textContent = 'Auto-calculated — editable override allowed';
+  document.getElementById('cmp-note-sub').style.color = '';
+  updateComp();
+}
+// Patch updateComp to respect manual override
+const _origUpdateComp = updateComp;
+// Already defined above; we wrap via reassignment after definition:
+
+function lDS(c,d,lbl,dash,yAxis){
+  const ds={label:lbl,data:d,borderColor:c,pointBackgroundColor:c,borderWidth:1.5,pointRadius:3,fill:false,tension:0.3,borderDash:dash||[]};
+  if(yAxis)ds.yAxisID=yAxis;
+  return ds;
+}
+
+new Chart(document.getElementById('c0a'),{type:'line',data:{labels:MO,datasets:[lDS('#1D9E75',[68,71,76,80,78],'On-time %',[],`y`),lDS('#378ADD',[22,21,20,19,18],'TT-offer (d)',[4,4],'y1'),lDS('#BA7517',[35,33,31,30,29],'TT-onboard (d)',[2,2],'y1')]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{color:GC},ticks:{color:TC,font:{size:11}}},y:{type:'linear',position:'left',min:60,max:90,grid:{color:GC},ticks:{color:'#1D9E75',font:{size:10},callback:v=>v+'%'},title:{display:true,text:'On-time %',color:'#1D9E75',font:{size:10}}},y1:{type:'linear',position:'right',min:10,max:40,grid:{drawOnChartArea:false},ticks:{color:'#888780',font:{size:10},callback:v=>v+'d'},title:{display:true,text:'Lead time (d)',color:'#888780',font:{size:10}}}}}});
+
+new Chart(document.getElementById('c0b'),{type:'line',data:{labels:MO,datasets:[lDS('#378ADD',[10.3,9.8,9.4,8.8,8.3],'Attrition %',[],`y`),lDS('#E8621A',[950,900,850,800,770],'CPH $',[4,4],'y1')]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{color:GC},ticks:{color:TC,font:{size:11}}},y:{type:'linear',position:'left',min:7,max:12,grid:{color:GC},ticks:{color:'#378ADD',font:{size:10},callback:v=>v+'%'},title:{display:true,text:'Attrition %',color:'#378ADD',font:{size:10}}},y1:{type:'linear',position:'right',min:600,max:1100,grid:{drawOnChartArea:false},ticks:{color:'#E8621A',font:{size:10},callback:v=>'$'+v},title:{display:true,text:'Cost/hire ($)',color:'#E8621A',font:{size:10}}}}}});
+
+new Chart(document.getElementById('c1a'),{type:'bar',data:{labels:['PHL','MYS','THA','IND','SGP','CHN'],datasets:[{label:'New openings L7d',data:[110,84,29,11,6,0],backgroundColor:'#E8621A',borderRadius:2},{label:'New hires OB L7d',data:[18,12,7,3,2,2],backgroundColor:'#1D9E75',borderRadius:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{color:GC},ticks:{color:TC,font:{size:11}}},y:{grid:{color:GC},ticks:{color:TC,font:{size:11}}}}}});
+
+new Chart(document.getElementById('c1b'),{type:'bar',data:{labels:['CHN','JPN','KOR','MYS','PHL','SGP','THA','IND','BRA'],datasets:[{label:'Median lead time (d)',data:[57,29,32,36,36,32,24,17,13],backgroundColor:function(ctx){return ctx.raw>40?'#378ADD':ctx.raw>30?'#BA7517':'#5DCAA5'},borderRadius:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{color:GC},ticks:{color:TC,font:{size:10}}},y:{grid:{color:GC},ticks:{color:TC,font:{size:11},callback:v=>v+'d'}}}}});
+
+function donutWL(canvasId,detId,dd){
+  const total=dd.values.reduce((a,b)=>a+b,0);
+  new Chart(document.getElementById(canvasId),{type:'doughnut',data:{datasets:[{data:dd.values,backgroundColor:dd.colors,borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,cutout:'62%',plugins:{legend:{display:false}}}});
+  const det=document.getElementById(detId);
+  if(det){det.innerHTML='';dd.labels.forEach((l,i)=>{det.innerHTML+=`<div style="display:flex;align-items:center;gap:5px"><span style="width:8px;height:8px;border-radius:2px;background:${dd.colors[i]};flex-shrink:0"></span><span>${l}</span><span style="font-weight:500;color:var(--t);margin-left:auto">${Math.round(dd.values[i]/total*100)}%</span></div>`});}
+}
+donutWL('c2-soh','soh-det',{labels:['Career site','Direct sourcing','Employee referral','Social media','Agency','Others'],values:[35,17,10,8,6,24],colors:['#E8621A','#F5864A','#BA7517','#1D9E75','#378ADD','#888780']});
+
+new Chart(document.getElementById('c2-att'),{type:'line',data:{labels:MO,datasets:[lDS('#378ADD',[5,4.8,4.5,4.3,4.2],'30d',[]),lDS('#BA7517',[7.9,7.5,7.2,7.0,6.8],'60d',[4,4]),lDS('#534AB7',[10.3,9.8,9.4,8.8,8.3],'90d',[2,2])]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{color:GC},ticks:{color:TC,font:{size:11}}},y:{min:3,max:12,grid:{color:GC},ticks:{color:TC,font:{size:11},callback:v=>v+'%'}}}}});
+
+const MX_COLS=['Total Hires','Total External Hires','On-time hiring','Median time-to-offer acceptance','Median time-to-onboard','Throughput','No Show rate','Median LT to target onboard date'];
+const MX_CLR=['#E8621A','#F5864A','#BA7517','#1D9E75','#378ADD','#534AB7','#E24B4A','#5DCAA5'];
+const MX_DATA={
+  country:{rows:[{f:'🇲🇾',n:'Malaysia'},{f:'🇵🇭',n:'Philippines'},{f:'🇹🇭',n:'Thailand'},{f:'🇸🇬',n:'Singapore'},{f:'🇮🇳',n:'India'},{f:'🇯🇵',n:'Japan'}],vals:[[118,102,81,19,28,9.8,3.2,38],[98,85,77,18,28,9.4,4.1,41],[72,60,74,20,30,8.2,3.8,44],[54,48,80,17,27,7.8,2.9,39],[46,42,72,22,32,6.6,5.1,36],[32,28,68,24,34,5.4,3.0,48]]},
+  entity:{rows:[{n:'TDCX Malaysia'},{n:'TDCX Philippines'},{n:'TDCX Singapore'},{n:'TDCX Thailand'},{n:'TDCX India'},{n:'Others'}],vals:[[130,115,76,20,30,10.2,3.5,42],[110,95,74,19,29,9.6,4.0,40],[52,46,81,17,27,7.4,2.8,38],[48,40,73,21,31,7.2,3.8,44],[28,24,68,23,33,5.8,5.0,36],[24,20,77,18,28,4.8,2.6,40]]},
+  project:{rows:[{n:'Project Alpha'},{n:'Project Beta'},{n:'Project Gamma'},{n:'Project Delta'},{n:'Others'}],vals:[[98,88,80,17,27,9.8,2.8,38],[76,68,78,19,29,8.4,3.4,40],[64,56,74,21,31,7.2,3.8,42],[52,44,76,20,30,6.8,3.2,44],[52,42,78,18,28,5.6,3.0,40]]},
+  grade:{rows:[{n:'Level 1'},{n:'Level 2'},{n:'Level 3'},{n:'Level 4'},{n:'Level 5'}],vals:[[142,128,82,16,26,12.4,4.2,36],[98,88,78,18,28,9.2,3.6,38],[62,54,74,21,32,7.4,3.0,42],[24,20,70,24,35,5.2,2.4,46],[11,8,65,28,40,3.8,1.8,52]]},
+  nature:{rows:[{n:'Agent'},{n:'Team Leader'},{n:'Support'},{n:'Manager'},{n:'Director and above'}],vals:[[180,165,79,17,28,11.2,3.8,38],[62,55,82,16,26,8.4,2.6,36],[52,46,74,19,30,7.6,3.2,42],[34,26,70,23,35,5.8,2.4,46],[14,6,65,28,40,3.2,1.8,52]]}
+};
+
+function buildMxHdrs(){
+  const el=document.getElementById('mx-col-hdrs');
+  el.innerHTML='';
+  MX_COLS.forEach((c,i)=>{el.innerHTML+=`<div style="flex:1;text-align:center;font-size:9px;color:${MX_CLR[i]};font-weight:500;line-height:1.2;min-width:0;word-break:break-word">${c}</div>`;});
+}
+buildMxHdrs();
+
+function renderMx(elId,dimKey){
+  const el=document.getElementById(elId);if(!el)return;el.innerHTML='';
+  const dim=MX_DATA[dimKey];
+  const maxes=dim.vals[0].map((_,ci)=>Math.max(...dim.vals.map(r=>r[ci])));
+  dim.rows.forEach((row,ri)=>{
+    const d=document.createElement('div');d.style.cssText='display:flex;align-items:center;gap:4px;margin-bottom:5px';
+    const lbl=row.f?`<span style="font-size:13px;width:20px;text-align:center">${row.f}</span><span style="font-size:11px;color:var(--t);width:66px;flex-shrink:0;line-height:1.2">${row.n}</span>`:`<span style="font-size:11px;color:var(--t);width:90px;flex-shrink:0;line-height:1.2">${row.n}</span>`;
+    let bars='';
+    dim.vals[ri].forEach((v,ci)=>{const pct=Math.round(v/maxes[ci]*100);bars+=`<div style="flex:1;height:15px;background:#F1EFE8;border-radius:2px;overflow:hidden;position:relative"><div style="width:${pct}%;height:100%;background:${MX_CLR[ci]};border-radius:2px"></div><span style="position:absolute;right:3px;top:50%;transform:translateY(-50%);font-size:9px;color:var(--t);font-weight:500">${v}</span></div>`;});
+    d.innerHTML=lbl+`<div style="flex:1;display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:3px">${bars}</div>`;
+    el.appendChild(d);
+  });
+}
+['country','entity','project','grade','nature'].forEach(k=>renderMx('mx-'+k,k));
+function setDim(dim,btn){document.querySelectorAll('#dim-tgl button').forEach(b=>b.classList.remove('on'));btn.classList.add('on');document.querySelectorAll('#p2 .sec').forEach(s=>s.classList.remove('on'));document.getElementById('dim-'+dim).classList.add('on');}
+
+new Chart(document.getElementById('c3-cph'),{type:'bar',data:{labels:MO,datasets:[{label:'2026',data:[950,900,850,800,770],backgroundColor:'#E8621A',borderRadius:3},{label:'Prior',data:[1050,990,970,930,880],backgroundColor:'#D3D1C7',borderRadius:3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{color:GC},ticks:{color:TC,font:{size:11}}},y:{min:600,grid:{color:GC},ticks:{color:TC,font:{size:11},callback:v=>'$'+v}}}}});
+
+donutWL('c3-cat','cat-det',{labels:['Agency fees','Job boards','Referral bonus'],values:[55,32,13],colors:['#E8621A','#F5864A','#BA7517']});
+donutWL('c3-ctry','ctry-det',{labels:['Philippines','Malaysia','Singapore','Others'],values:[31,23,18,28],colors:['#E8621A','#F5864A','#BA7517','#B4B2A9']});
+function switchDonut(which,btn){document.querySelectorAll('.donut-tab').forEach(b=>b.classList.remove('on'));btn.classList.add('on');document.querySelectorAll('.donut-sec').forEach(s=>s.classList.remove('on'));document.getElementById('donut-'+which).classList.add('on');}
+
+const WP=[{n:'Philippines',w:8.9,p:9.8},{n:'Malaysia',w:8.0,p:7.8},{n:'India',w:8.0,p:7.4},{n:'Singapore',w:7.2,p:8.4},{n:'Thailand',w:6.0,p:7.4}];
+const wpEl=document.getElementById('mx-wp');
+const mxW=Math.max(...WP.map(x=>x.w)),mxP=Math.max(...WP.map(x=>x.p));
+wpEl.innerHTML='<div style="display:flex;gap:4px;margin-bottom:6px;padding-left:90px"><div style="flex:1;text-align:center;font-size:11px;font-weight:500;color:#E8621A">Workload (open SRF / recruiter)</div><div style="flex:1;text-align:center;font-size:11px;font-weight:500;color:#1D9E75">Productivity (hires / month)</div></div>';
+WP.forEach(r=>{const d=document.createElement('div');d.style.cssText='display:flex;align-items:center;gap:4px;margin-bottom:4px';d.innerHTML=`<span style="font-size:11px;color:var(--t);width:90px;flex-shrink:0">${r.n}</span><div style="flex:1;height:15px;background:#F1EFE8;border-radius:2px;overflow:hidden;position:relative"><div style="width:${Math.round(r.w/mxW*100)}%;height:100%;background:#E8621A;border-radius:2px"></div><span style="position:absolute;right:4px;top:50%;transform:translateY(-50%);font-size:9px;color:var(--t);font-weight:500">${r.w}</span></div><div style="flex:1;height:15px;background:#F1EFE8;border-radius:2px;overflow:hidden;position:relative"><div style="width:${Math.round(r.p/mxP*100)}%;height:100%;background:#1D9E75;border-radius:2px"></div><span style="position:absolute;right:4px;top:50%;transform:translateY(-50%);font-size:9px;color:var(--t);font-weight:500">${r.p}</span></div>`;wpEl.appendChild(d);});
+function setWP(which,btn){document.querySelectorAll('#wp-tgl button').forEach(b=>b.classList.remove('on'));btn.classList.add('on');document.querySelectorAll('#p3 .sec').forEach(s=>s.classList.remove('on'));document.getElementById('wp-'+which).classList.add('on');}
+new Chart(document.getElementById('c3-wp'),{type:'line',data:{labels:MO,datasets:[lDS('#E8621A',[8.2,8.5,7.8,7.4,7.4],'Workload',[]),lDS('#1D9E75',[7.2,7.8,8.2,8.6,8.6],'Productivity',[4,4])]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{color:GC},ticks:{color:TC,font:{size:11}}},y:{min:6,max:10,grid:{color:GC},ticks:{color:TC,font:{size:11}}}}}});
+
+donutWL('c4-soa','soa-det',{labels:['Career site','Direct sourcing','Employee referral','Social media','Agency','Others'],values:[38,18,14,12,8,10],colors:['#E8621A','#F5864A','#BA7517','#1D9E75','#378ADD','#888780']});
+
+const PS=[{n:'New / unassigned',v:412,lt:3},{n:'Job posting open',v:1820,lt:8},{n:'Sourcing active',v:980,lt:14},{n:'Screening',v:620,lt:6},{n:'Interview',v:390,lt:10},{n:'Assessment',v:240,lt:5},{n:'Offer approved',v:180,lt:4},{n:'Pending onboard',v:376,lt:12}];
+const pEl=document.getElementById('mx-pipeline');
+const mxSRF=Math.max(...PS.map(s=>s.v)),mxLT=Math.max(...PS.map(s=>s.lt));
+PS.forEach(s=>{const d=document.createElement('div');d.style.cssText='display:flex;align-items:center;gap:4px;margin-bottom:4px';d.innerHTML=`<span style="font-size:11px;color:var(--t);width:102px;flex-shrink:0;line-height:1.2">${s.n}</span><div style="flex:1;height:15px;background:#F1EFE8;border-radius:2px;overflow:hidden;position:relative"><div style="width:${Math.round(s.v/mxSRF*100)}%;height:100%;background:#E8621A;border-radius:2px"></div><span style="position:absolute;right:4px;top:50%;transform:translateY(-50%);font-size:9px;color:var(--t);font-weight:500">${s.v.toLocaleString()}</span></div><div style="flex:1;height:15px;background:#F1EFE8;border-radius:2px;overflow:hidden;position:relative;margin-left:4px"><div style="width:${Math.round(s.lt/mxLT*100)}%;height:100%;background:#1D9E75;border-radius:2px"></div><span style="position:absolute;right:4px;top:50%;transform:translateY(-50%);font-size:9px;color:var(--t);font-weight:500">${s.lt}d</span></div>`;pEl.appendChild(d);});
+</script>
