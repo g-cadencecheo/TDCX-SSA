@@ -171,20 +171,24 @@ select,input[type=date]{width:100%;font-size:11px;padding:3px 6px;background:#F1
   <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:8px">
     <div class="card">
       <div class="cht">On-time hiring &amp; lead time trends <button class="dt-btn" onclick="sendPrompt('Drill through: show me the list of hires for this period broken down by on-time status')">Drill through ↗</button></div>
-      <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:5px;font-size:11px;color:var(--t2)">
-        <span style="display:flex;align-items:center;gap:4px"><span style="width:9px;height:9px;border-radius:2px;background:#1D9E75"></span>On-time hiring % (left axis)</span>
-        <span style="display:flex;align-items:center;gap:4px"><span style="width:9px;height:9px;border-radius:2px;background:#E8621A;border:1.5px dashed #E8621A;background:transparent"></span>Time-to-offer acceptance, days (right axis)</span>
-        <span style="display:flex;align-items:center;gap:4px"><span style="width:9px;height:9px;border-radius:2px;background:transparent;border:1.5px dotted #BA7517"></span>Time-to-onboard, days (right axis)</span>
+      <div id="c0a-tgl" style="display:flex;gap:4px;margin-bottom:7px;flex-wrap:wrap">
+        <button class="on" onclick="switchC0a('ontime',this)" style="font-size:11px;padding:3px 11px;border-radius:5px;border:0.5px solid var(--bd);background:var(--or);color:#fff;cursor:pointer">On-time hiring %</button>
+        <button onclick="switchC0a('offer',this)" style="font-size:11px;padding:3px 11px;border-radius:5px;border:0.5px solid var(--bd);background:var(--cd);color:var(--t2);cursor:pointer">Time-to-offer acceptance</button>
+        <button onclick="switchC0a('onboard',this)" style="font-size:11px;padding:3px 11px;border-radius:5px;border:0.5px solid var(--bd);background:var(--cd);color:var(--t2);cursor:pointer">Time-to-onboard</button>
       </div>
-      <div style="position:relative;height:120px"><canvas id="c0a" role="img" aria-label="On-time hiring and lead time dual axis chart Jan–May 2026">On-time: 68,71,76,80,78%. TT-offer: 22,21,20,19,18d. TT-onboard: 35,33,31,30,29d</canvas></div>
+      <div id="c0a-label" style="font-size:11px;color:var(--t2);margin-bottom:4px;display:flex;align-items:center;gap:5px">
+        <span id="c0a-dot" style="width:9px;height:9px;border-radius:2px;background:#1D9E75;flex-shrink:0"></span>
+        <span id="c0a-desc">On-time hiring % — target 80%</span>
+      </div>
+      <div style="position:relative;height:120px"><canvas id="c0a"></canvas></div>
     </div>
     <div class="card">
-      <div class="cht">90-day attrition &amp; cost per hire <button class="dt-btn" onclick="sendPrompt('Drill through: show me the list of hires with their attrition status at 90 days')">Drill through ↗</button></div>
-      <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:5px;font-size:11px;color:var(--t2)">
-        <span style="display:flex;align-items:center;gap:4px"><span style="width:9px;height:9px;border-radius:2px;background:#378ADD"></span>90-day attrition % (left axis)</span>
-        <span style="display:flex;align-items:center;gap:4px"><span style="width:9px;height:9px;border-radius:2px;background:transparent;border:1.5px dashed #E8621A"></span>Cost per hire $ (right axis)</span>
+      <div class="cht">90-day attrition trend <button class="dt-btn" onclick="sendPrompt('Drill through: show me the list of hires with their attrition status at 90 days')">Drill through ↗</button></div>
+      <div style="display:flex;align-items:center;gap:5px;margin-bottom:5px;font-size:11px;color:var(--t2)">
+        <span style="width:9px;height:9px;border-radius:2px;background:#378ADD;flex-shrink:0"></span>
+        90-day attrition % &nbsp;<span style="background:#E1F5EE;color:#085041;border-radius:10px;padding:1px 7px;font-size:10px;font-weight:500">target &lt;10%</span>
       </div>
-      <div style="position:relative;height:120px"><canvas id="c0b" role="img" aria-label="90-day attrition and cost per hire dual axis Jan–May 2026">Attrition: 10.3,9.8,9.4,8.8,8.3%. Cost: 950,900,850,800,770</canvas></div>
+      <div style="position:relative;height:120px"><canvas id="c0b" role="img" aria-label="90-day attrition trend Jan–May 2026">Attrition: 10.3,9.8,9.4,8.8,8.3%</canvas></div>
     </div>
   </div>
   <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;margin-top:8px">
@@ -634,6 +638,7 @@ function go(n,el){
   document.getElementById('pg-title').textContent=TITLES[n];
   document.getElementById('r-hire-type').style.display=n===2?'block':'none';
   document.getElementById('r-srf-slicers').style.display=n===4?'block':'none';
+  document.querySelector('.rail').style.display=n===5?'none':'';
 }
 
 function setComp(mode,btn){
@@ -698,9 +703,31 @@ function lDS(c,d,lbl,dash,yAxis){
   return ds;
 }
 
-new Chart(document.getElementById('c0a'),{type:'line',data:{labels:MO,datasets:[lDS('#1D9E75',[68,71,76,80,78],'On-time %',[],`y`),lDS('#378ADD',[22,21,20,19,18],'TT-offer (d)',[4,4],'y1'),lDS('#BA7517',[35,33,31,30,29],'TT-onboard (d)',[2,2],'y1')]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{color:GC},ticks:{color:TC,font:{size:11}}},y:{type:'linear',position:'left',min:60,max:90,grid:{color:GC},ticks:{color:'#1D9E75',font:{size:10},callback:v=>v+'%'},title:{display:true,text:'On-time %',color:'#1D9E75',font:{size:10}}},y1:{type:'linear',position:'right',min:10,max:40,grid:{drawOnChartArea:false},ticks:{color:'#888780',font:{size:10},callback:v=>v+'d'},title:{display:true,text:'Lead time (d)',color:'#888780',font:{size:10}}}}}});
+const C0A_METRICS = {
+  ontime: {label:'On-time hiring %', color:'#1D9E75', data:[68,71,76,80,78], type:'bar', unit:'%', desc:'On-time hiring % — target 80%', min:50, max:100},
+  offer:  {label:'Time-to-offer acceptance (d)', color:'#378ADD', data:[22,21,20,19,18], type:'line', unit:'d', desc:'Median time-to-offer acceptance, days', min:10, max:30},
+  onboard:{label:'Time-to-onboard (d)', color:'#BA7517', data:[35,33,31,30,29], type:'line', unit:'d', desc:'Median time-to-onboard, days', min:20, max:45}
+};
+let c0aChart = null;
+function buildC0a(key) {
+  const m = C0A_METRICS[key];
+  if (c0aChart) c0aChart.destroy();
+  const ctx = document.getElementById('c0a');
+  const ds = m.type === 'bar'
+    ? {label:m.label, data:m.data, backgroundColor:m.color+'CC', borderColor:m.color, borderWidth:1, borderRadius:3}
+    : {label:m.label, data:m.data, borderColor:m.color, pointBackgroundColor:m.color, borderWidth:2, pointRadius:3, fill:false, tension:0.3};
+  c0aChart = new Chart(ctx, {type:m.type, data:{labels:MO, datasets:[ds]}, options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{x:{grid:{color:GC}, ticks:{color:TC, font:{size:11}}}, y:{min:m.min, max:m.max, grid:{color:GC}, ticks:{color:m.color, font:{size:11}, callback:v=>v+m.unit}}}}});
+  document.getElementById('c0a-dot').style.background = m.color;
+  document.getElementById('c0a-desc').textContent = m.desc;
+}
+function switchC0a(key, btn) {
+  document.querySelectorAll('#c0a-tgl button').forEach(b=>{b.style.background='var(--cd)';b.style.color='var(--t2)';b.style.borderColor='var(--bd)'});
+  btn.style.background='var(--or)'; btn.style.color='#fff'; btn.style.borderColor='var(--or)';
+  buildC0a(key);
+}
+buildC0a('ontime');
 
-new Chart(document.getElementById('c0b'),{type:'line',data:{labels:MO,datasets:[lDS('#378ADD',[10.3,9.8,9.4,8.8,8.3],'Attrition %',[],`y`),lDS('#E8621A',[950,900,850,800,770],'CPH $',[4,4],'y1')]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{color:GC},ticks:{color:TC,font:{size:11}}},y:{type:'linear',position:'left',min:7,max:12,grid:{color:GC},ticks:{color:'#378ADD',font:{size:10},callback:v=>v+'%'},title:{display:true,text:'Attrition %',color:'#378ADD',font:{size:10}}},y1:{type:'linear',position:'right',min:600,max:1100,grid:{drawOnChartArea:false},ticks:{color:'#E8621A',font:{size:10},callback:v=>'$'+v},title:{display:true,text:'Cost/hire ($)',color:'#E8621A',font:{size:10}}}}}});
+new Chart(document.getElementById('c0b'),{type:'line',data:{labels:MO,datasets:[lDS('#378ADD',[10.3,9.8,9.4,8.8,8.3],'90d Attrition %',[])]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},annotation:{annotations:{target:{type:'line',yMin:10,yMax:10,borderColor:'#BA7517',borderWidth:1,borderDash:[4,4]}}}},scales:{x:{grid:{color:GC},ticks:{color:TC,font:{size:11}}},y:{min:7,max:12,grid:{color:GC},ticks:{color:'#378ADD',font:{size:11},callback:v=>v+'%'}}}}});
 
 new Chart(document.getElementById('c1a'),{type:'bar',data:{labels:['PHL','MYS','THA','IND','SGP','CHN'],datasets:[{label:'New openings L7d',data:[110,84,29,11,6,0],backgroundColor:'#E8621A',borderRadius:2},{label:'New hires OB L7d',data:[18,12,7,3,2,2],backgroundColor:'#1D9E75',borderRadius:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{color:GC},ticks:{color:TC,font:{size:11}}},y:{grid:{color:GC},ticks:{color:TC,font:{size:11}}}}}});
 
